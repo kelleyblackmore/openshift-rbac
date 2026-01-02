@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sre-support
+  namespace: app-payments-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: support
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: ocp-sre-support

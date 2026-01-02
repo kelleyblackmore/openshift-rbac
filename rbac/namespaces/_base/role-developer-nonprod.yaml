@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-nonprod
+  namespace: NAMESPACE_PLACEHOLDER
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments","replicasets","statefulsets"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["services","configmaps","pods","pods/log","events"]
+  verbs: ["get","list","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+- apiGroups: ["route.openshift.io"]
+  resources: ["routes"]
+  verbs: ["get","list","watch"]
+- apiGroups: ["batch"]
+  resources: ["jobs","cronjobs"]
+  verbs: ["get","list","watch"]

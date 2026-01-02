@@ -1,0 +1,64 @@
+name: Validate RBAC Configuration
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'rbac/**'
+      - 'validate.sh'
+      - '.github/workflows/validate-rbac.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'rbac/**'
+      - 'validate.sh'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: YAML Syntax & RBAC Validation
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install YAML validation dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Make validate script executable
+        run: chmod +x ./validate.sh
+
+      - name: Run RBAC validation
+        run: ./validate.sh
+
+      - name: Display validation summary
+        if: success()
+        run: |
+          echo ""
+          echo "✓ All YAML files passed validation"
+          echo ""
+          echo "Files validated:"
+          find rbac -name "*.yaml" -type f | sort | sed 's/^/  /'
+
+      - name: Provide helpful error context
+        if: failure()
+        run: |
+          echo ""
+          echo "❌ RBAC validation failed"
+          echo ""
+          echo "Run locally to debug:"
+          echo "  ./validate.sh"
+          echo ""
+          echo "Common issues:"
+          echo "  - Invalid YAML syntax (use yamllint)"
+          echo "  - Missing required fields (apiVersion, kind, metadata)"
+          echo "  - Incorrect group references"
+          exit 1

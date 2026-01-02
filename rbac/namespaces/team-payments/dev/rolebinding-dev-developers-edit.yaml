@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-developers-edit
+  namespace: app-payments-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: developer-dev
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: ocp-app-payments-developers
